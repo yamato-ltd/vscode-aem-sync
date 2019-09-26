@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
+const VaultSyncManager = require('./sync/VaultSyncManager');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -21,7 +22,16 @@ function activate(context) {
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World!');
+		vscode.window.showInformationMessage('Hello VS World!');
+		var server = "http://localhost:4504",
+			acceptSelfSignedCert = true,
+			user = "admin",
+			password = "admin",
+			path = "C:/Users/asao/workspace/aem-world-repo/ui.apps/src/main/content/jcr_root/apps/jalcms/jp/components/content/accordion/accordion.html",
+			filterFile = "C:/Users/asao/workspace/aem-world-repo/ui.apps/src/main/content/META-INF/vault/filter.xml",
+			action = VaultSyncManager.PUSH;
+		VaultSyncManager.sync(server, acceptSelfSignedCert, user, password, path, filterFile, action);
+
 	});
 
 	context.subscriptions.push(disposable);
