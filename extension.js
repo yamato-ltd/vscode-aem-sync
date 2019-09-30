@@ -10,36 +10,79 @@ const VaultSyncManager = require('./sync/VaultSyncManager');
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
+	var config = vscode.workspace.getConfiguration('aemsync');
+	var	autopush = config.get('autopush');
+	var currentFile = vscode.window.activeTextEditor.document.fileName.replace(/\//g, '\\');
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "vscode-aem-sync" is now active!');
+	if (autopush) {
+		vscode.workspace.onDidSaveTextDocument(function(document) {
+			push(document.uri.fsPath.replace(/\//g, '\\'));
+		});
+	}
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('extension.helloWorld', function () {
-		// The code you place here will be executed every time your command is executed
+	context.subscriptions.push(vscode.commands.registerCommand('extension.aempush', function () {
+		push(currentFile);
+	}));
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello VS World!');
-		var server = "http://localhost:4504",
-			acceptSelfSignedCert = true,
-			user = "admin",
-			password = "admin",
-			path = "C:/Users/asao/workspace/aem-world-repo/ui.apps/src/main/content/jcr_root/apps/jalcms/jp/components/content/accordion/accordion.html",
-			filterFile = "C:/Users/asao/workspace/aem-world-repo/ui.apps/src/main/content/META-INF/vault/filter.xml",
-			action = VaultSyncManager.PUSH;
-		VaultSyncManager.sync(server, acceptSelfSignedCert, user, password, path, filterFile, action);
-
-	});
-
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(vscode.commands.registerCommand('extension.aempull', function () {
+		pull(currentFile)
+		for (var editor of vscode.window.visibleTextEditors) {
+			if (!editor.document.isDirty) {
+				vscode.commands.executeCommand('workbench.action.files.revert', editor.document.uri);
+			}
+		}
+	}));
 }
 exports.activate = activate;
 
 // this method is called when your extension is deactivated
 function deactivate() {}
+
+function getFilterFiles() {
+	return vscode.workspace.findFiles('**/src/main/content/META-INF/vault/filter.xml');
+}
+
+function push(path) {
+	if (path.indexOf('jcr_root') < 0) {
+		return;
+	}
+	var config = vscode.workspace.getConfiguration('aemsync');
+	var server = config.get('server'),
+		acceptSelfSignedCert = true,
+		user = config.get('username'),
+		password = config.get('password');
+
+	if (path.endsWith('.content.xml')) {
+		path = path.substring(0, path.length - 13);
+	}
+	getFilterFiles().then((filterFiles) => {
+		var filterFile = filterFiles[0].fsPath.replace(/\//g, '\\');
+		VaultSyncManager.sync(server, acceptSelfSignedCert, user, password, path, filterFile, VaultSyncManager.PUSH);
+	}, () => {
+		vscode.window.showInformationMessage("filterFileの取得に失敗しました");
+	});
+}
+
+function pull(path) {
+	if (path.indexOf('jcr_root') < 0) {
+		return;
+	}
+	var config = vscode.workspace.getConfiguration('aemsync');
+	var server = config.get('server'),
+		acceptSelfSignedCert = true,
+		user = config.get('username'),
+		password = config.get('password');
+
+	if (path.endsWith('.content.xml')) {
+		path = path.substring(0, path.length - 13);
+	}
+	getFilterFiles().then((filterFiles) => {
+		var filterFile = filterFiles[0].fsPath.replace(/\//g, '\\');
+		VaultSyncManager.sync(server, acceptSelfSignedCert, user, password, path, filterFile, VaultSyncManager.PULL);
+	}, () => {
+		vscode.window.showInformationMessage("filterFileの取得に失敗しました");
+	});
+}
 
 module.exports = {
 	activate,
