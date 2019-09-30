@@ -10,16 +10,57 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.helloWorld"
+		"workspaceContains:**/jcr_root/**"
 	],
 	"main": "./extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"command": "extension.aempush",
+				"title": "Export to AEM Server"
+			},
+			{
+				"command": "extension.aempull",
+				"title": "Import from AEM Server"
 			}
-		]
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "extension.aempush",
+					"group": "AEM@100"
+				},
+				{
+					"command": "extension.aempull",
+					"group": "AEM@100"
+				}
+			]
+		},
+		"configuration": {
+			"type": "object",
+			"title": "AEM-Sync configuration",
+			"properties": {
+				"aemsync.server": {
+					"type": "string",
+					"default": "http://localhost:4502",
+					"description": "The port to connect to AEM with"
+				},
+				"aemsync.username": {
+					"type": "string",
+					"default": "admin",
+					"description": "The username to use to connect to AEM"
+				},
+				"aemsync.password": {
+					"type": "string",
+					"default": "admin",
+					"description": "The password to use to connect to AEM"
+				},
+				"aemsync.autopush": {
+					"type": "boolean",
+					"default": false
+				}
+			}
+		}
 	},
 	"scripts": {
 		"test": "node ./test/runTest.js"
