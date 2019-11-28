@@ -12,7 +12,6 @@ const VaultSyncManager = require('./sync/VaultSyncManager');
 function activate(context) {
 	var config = vscode.workspace.getConfiguration('aemsync');
 	var	autopush = config.get('autopush');
-	var currentFile = vscode.window.activeTextEditor.document.fileName.replace(/\//g, '\\');
 
 	if (autopush) {
 		vscode.workspace.onDidSaveTextDocument(function(document) {
@@ -20,12 +19,12 @@ function activate(context) {
 		});
 	}
 
-	context.subscriptions.push(vscode.commands.registerCommand('extension.aempush', function () {
-		push(currentFile);
+	context.subscriptions.push(vscode.commands.registerCommand('extension.aempush', (filePath) => {
+		push(filePath.fsPath);
 	}));
 
-	context.subscriptions.push(vscode.commands.registerCommand('extension.aempull', function () {
-		pull(currentFile)
+	context.subscriptions.push(vscode.commands.registerCommand('extension.aempull', (filePath) => {
+		pull(filePath.fsPath);
 		for (var editor of vscode.window.visibleTextEditors) {
 			if (!editor.document.isDirty) {
 				vscode.commands.executeCommand('workbench.action.files.revert', editor.document.uri);
