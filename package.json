@@ -25,6 +25,16 @@
 			}
 		],
 		"menus": {
+			"editor/context": [
+				{
+					"command": "extension.aempush",
+					"group": "AEM@100"
+				},
+				{
+					"command": "extension.aempull",
+					"group": "AEM@100"
+				}
+			],
 			"explorer/context": [
 				{
 					"command": "extension.aempush",
