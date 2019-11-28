@@ -43,7 +43,7 @@ function getFilterFiles() {
 }
 
 function push(path) {
-	if (path.indexOf('jcr_root') < 0) {
+	if (!path.includes('jcr_root')) {
 		return;
 	}
 	var config = vscode.workspace.getConfiguration('aemsync');
@@ -64,7 +64,7 @@ function push(path) {
 }
 
 function pull(path) {
-	if (path.indexOf('jcr_root') < 0) {
+	if (!path.includes('jcr_root')) {
 		return;
 	}
 	var config = vscode.workspace.getConfiguration('aemsync');
