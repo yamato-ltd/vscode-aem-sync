@@ -1,3 +1,5 @@
-# vscode-aem-sync README
+# VSCode AEM Sync
 
-あとで書く
+## Licensing
+
+This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
