@@ -1,9 +1,9 @@
 {
 	"name": "vscode-aem-sync",
-	"displayName": "vscode-aem-sync",
-	"description": "",
+	"displayName": "VSCode AEM Sync",
+	"description": "Sync files, folders, nodes to AEM",
 	"publisher": "yamato-ltd",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"engines": {
 		"vscode": "^1.38.0"
 	},
