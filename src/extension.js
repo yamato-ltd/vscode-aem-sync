@@ -11,22 +11,20 @@ const VaultSyncManager = require('./sync/VaultSyncManager');
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-	const syncManager = new SyncManager();
-
 	vscode.workspace.onDidSaveTextDocument(function (document) {
 		const autopush = vscode.workspace.getConfiguration('aemsync').get('autopush');
 		const path = document.uri.fsPath;
 		if (path.includes('jcr_root') && autopush) {
-			syncManager.push(path);
+			SyncManager.push(path);
 		}
 	});
 
 	context.subscriptions.push(vscode.commands.registerCommand('extension.aempush', (filePath) => {
-		syncManager.push(filePath.fsPath);
+		SyncManager.push(filePath.fsPath);
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('extension.aempull', (filePath) => {
-		syncManager.pull(filePath.fsPath);
+		SyncManager.pull(filePath.fsPath);
 		// Importしたファイルを更新する
 		for (var editor of vscode.window.visibleTextEditors) {
 			if (!editor.document.isDirty) {
@@ -40,28 +38,25 @@ function activate(context) {
 function deactivate() {}
 
 class SyncManager {
-	constructor() {
-		this.setFilterPath();
-	}
-	
-	push(path) {
+	static push(path) {
 		if (!path.includes('jcr_root')) {
 			vscode.window.showErrorMessage(`path not under jcr_root folder: ${path}`);
 			return;
 		}
-		const server = this.getServer();
-		const acceptSelfSignedCert = this.getAcceptSelfSignedCert();
-		const user = this.getUser();
-		const password = this.getPassword();
+		const server = SyncManager.getServer();
+		const acceptSelfSignedCert = SyncManager.getAcceptSelfSignedCert();
+		const user = SyncManager.getUser();
+		const password = SyncManager.getPassword();
+		const filterPath = SyncManager.getFilterPath(path);
 		VaultSyncManager.sync(server, acceptSelfSignedCert, user, password,
-			path, this.filterPath, VaultSyncManager.PUSH).then(() => {
+			path, filterPath, VaultSyncManager.PUSH).then(() => {
 				vscode.window.showInformationMessage(`Successfully exported: ${SyncManager.getRemotePath(path)}`);
 			}, (err) => {
 				vscode.window.showErrorMessage(`Failed to export: ${SyncManager.getRemotePath(path)} ${err}`);
 			});
 	}
 	
-	pull(path) {
+	static pull(path) {
 		if (!path.includes('jcr_root')) {
 			vscode.window.showErrorMessage(`path not under jcr_root folder: ${path}`);
 			return;
@@ -70,35 +65,36 @@ class SyncManager {
 		const acceptSelfSignedCert = this.getAcceptSelfSignedCert();
 		const user = this.getUser();
 		const password = this.getPassword();
+		const filterPath = SyncManager.getFilterPath(path);
 		VaultSyncManager.sync(server, acceptSelfSignedCert, user, password,
-			path, this.filterPath, VaultSyncManager.PULL).then(() => {
+			path, filterPath, VaultSyncManager.PULL).then(() => {
 				vscode.window.showInformationMessage(`Successfully Imported: ${SyncManager.getRemotePath(path)}`);
 			}, (err) => {
 				vscode.window.showErrorMessage(`Failed to import: ${SyncManager.getRemotePath(path)} ${err}`);
 			});
 	}
 
-	getServer() {
+	static getServer() {
 		return vscode.workspace.getConfiguration('aemsync').get('server');
 	}
 
-	getAcceptSelfSignedCert() {
+	static getAcceptSelfSignedCert() {
 		return vscode.workspace.getConfiguration('aemsync').get('acceptSelfSignedCert');
 	}
 
-	getUser() {
+	static getUser() {
 		return vscode.workspace.getConfiguration('aemsync').get('user');
 	}
 
-	getPassword() {
+	static getPassword() {
 		return vscode.workspace.getConfiguration('aemsync').get('password');
 	}
 
-	async setFilterPath() {
-		const PATH = Path.join('**', 'src', 'main', 'content', 'META-INF', 'vault', 'filter.xml');
-		const filterFiles = await vscode.workspace.findFiles(PATH);
-		const filterPath = filterFiles[0].fsPath;
-		this.filterPath = filterPath;
+	static getFilterPath(path) {
+		// pathに最も近いfilter.xmlを取得する
+		const root = path.substring(0, path.indexOf('jcr_root') - 1)
+		const filterPath = Path.join(root, 'META-INF', 'vault', 'filter.xml');
+		return filterPath;
 	}
 
 	static getRemotePath(path) {
