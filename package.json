@@ -13,7 +13,7 @@
 	"activationEvents": [
 		"workspaceContains:**/jcr_root/**"
 	],
-	"main": "./extension.js",
+	"main": "src/extension.js",
 	"contributes": {
 		"commands": [
 			{
