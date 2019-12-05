@@ -54,25 +54,27 @@
 				"aemsync.server": {
 					"type": "string",
 					"default": "http://localhost:4502",
-					"description": "The port to connect to AEM with"
+					"description": "Server URL"
 				},
 				"aemsync.user": {
 					"type": "string",
 					"default": "admin",
-					"description": "The username to use to connect to AEM"
+					"description": "Username"
 				},
 				"aemsync.password": {
 					"type": "string",
 					"default": "admin",
-					"description": "The password to use to connect to AEM"
+					"description": "Password"
 				},
 				"aemsync.autopush": {
 					"type": "boolean",
-					"default": false
+					"default": false,
+					"description": "Automitically synchronize file-system changes to server"
 				},
 				"aemsync.acceptSelfSignedCert": {
 					"type": "boolean",
-					"default": false
+					"default": false,
+					"description": "Accept self-signed certificates for HTTPs"
 				}
 			}
 		}
