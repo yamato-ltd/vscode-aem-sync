@@ -25,7 +25,7 @@ function activate(context) {
 
 	context.subscriptions.push(vscode.commands.registerCommand('extension.aempull', (filePath) => {
 		SyncManager.pull(filePath.fsPath);
-		// Importしたファイルを更新する
+		// Refresh editor
 		for (var editor of vscode.window.visibleTextEditors) {
 			if (!editor.document.isDirty) {
 				vscode.commands.executeCommand('workbench.action.files.revert', editor.document.uri);
@@ -91,7 +91,7 @@ class SyncManager {
 	}
 
 	static getFilterPath(path) {
-		// pathに最も近いfilter.xmlを取得する
+		// get the filter.xml nearest from path
 		const root = path.substring(0, path.indexOf('jcr_root') - 1)
 		const filterPath = Path.join(root, 'META-INF', 'vault', 'filter.xml');
 		return filterPath;
