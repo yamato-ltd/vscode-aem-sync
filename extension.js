@@ -15,11 +15,9 @@ function activate(context) {
 
 	vscode.workspace.onDidSaveTextDocument(function (document) {
 		const autopush = vscode.workspace.getConfiguration('aemsync').get('autopush');
-		if (autopush) {
-			const path = document.uri.fsPath;
-			if (path.includes('jcr_root')) {
-				syncManager.push(path);
-			}
+		const path = document.uri.fsPath;
+		if (path.includes('jcr_root') && autopush) {
+			syncManager.push(path);
 		}
 	});
 
@@ -47,6 +45,10 @@ class SyncManager {
 	}
 	
 	push(path) {
+		if (!path.includes('jcr_root')) {
+			vscode.window.showErrorMessage(`path not under jcr_root folder: ${path}`);
+			return;
+		}
 		const server = this.getServer();
 		const acceptSelfSignedCert = this.getAcceptSelfSignedCert();
 		const user = this.getUser();
@@ -60,6 +62,10 @@ class SyncManager {
 	}
 	
 	pull(path) {
+		if (!path.includes('jcr_root')) {
+			vscode.window.showErrorMessage(`path not under jcr_root folder: ${path}`);
+			return;
+		}
 		const server = this.getServer();
 		const acceptSelfSignedCert = this.getAcceptSelfSignedCert();
 		const user = this.getUser();
