@@ -4,6 +4,10 @@
 	"description": "Sync files, folders, nodes to AEM",
 	"publisher": "yamato-ltd",
 	"version": "1.0.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yamato-ltd/vscode-aem-sync.git"
+	},
 	"engines": {
 		"vscode": "^1.38.0"
 	},

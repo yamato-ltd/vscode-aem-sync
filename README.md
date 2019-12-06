@@ -24,4 +24,4 @@ If auto-push feature is enabled, `Export to AEM Server` is executed automaticall
 
 ## Licensing
 
-This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
+This project is licensed under the Apache V2 License. See LICENSE for more information.
