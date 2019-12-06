@@ -4,6 +4,7 @@
 	"description": "Sync files, folders, nodes to AEM",
 	"publisher": "yamato-ltd",
 	"version": "1.0.0",
+	"license": "MIT",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/yamato-ltd/vscode-aem-sync.git"

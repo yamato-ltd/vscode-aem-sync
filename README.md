@@ -21,7 +21,3 @@ If auto-push feature is enabled, `Export to AEM Server` is executed automaticall
 |aemsync.password|Password|admin|
 |aemsync.autopush|Automitically synchronize file-system changes to server|false|
 |aemsync.acceptSelfSignedCert|Accept self-signed certificates for HTTPs|false|
-
-## Licensing
-
-This project is licensed under the Apache V2 License. See LICENSE for more information.
