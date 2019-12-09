@@ -195,7 +195,7 @@
             }
         ).then(
             function () {
-                var searchFolder = Path.normalize(path);
+                var searchFolder = Fs.statSync(path).isDirectory() ? Path.normalize(path) : Path.dirname(path)
 
                 function readAndAppend(file, relPath) {
                     return Fs.readFile(file).then(
