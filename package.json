@@ -3,7 +3,7 @@
 	"displayName": "VSCode AEM Sync",
 	"description": "Sync files, folders, nodes to AEM",
 	"publisher": "yamato-ltd",
-	"icon":"VSCodeAEMSyncIcon.PNG",
+	"icon": "VSCodeAEMSyncIcon.PNG",
 	"version": "1.0.1",
 	"license": "MIT",
 	"repository": {
