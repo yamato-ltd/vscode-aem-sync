@@ -4,7 +4,7 @@
 	"description": "Sync files, folders, nodes to AEM",
 	"publisher": "yamato-ltd",
 	"icon": "AEMSync-rocket.PNG",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
