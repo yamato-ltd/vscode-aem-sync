@@ -268,14 +268,17 @@
             for (var i = 0; i < filters.length; i++) {
                 filter = filters[i];
                 if (remotePath !== '/' && remotePath.indexOf(filter.root) === 0 && remotePath.length > filter.root.length) {
+                    var importMode = '';
                     // we're syncing something which is below a filter
                     if (remotePath.endsWith('/.content.xml')) {
                         remotePath = remotePath.substring(0, remotePath.length - 13);
+                        // if update mode is not set, sibling files will be removed
+                        importMode = 'mode="update"';
                     } else if (remotePath.endsWith('_cq_editConfig.xml')) {
                         remotePath = remotePath.substring(0, remotePath.length - 4);
                     }
                     remotePath = remotePath.replace(/\/_cq_/g, '/cq:');
-                    filterString += '<filter root="' + remotePath + '"/>';
+                    filterString += '<filter root="' + remotePath + '" ' + importMode + '/>';
                 } else {
                     // we're either syncing a full content package (remotePath is /) or something that matches a filter exactly
                     filterString += '<filter root="' + filter.root + '">';
@@ -288,6 +291,7 @@
             }
         }
         filterString += '</workspaceFilter>';
+        console.log(filterString);
 
         return Fs.mkdirp(tempWorkingDirectory + Path.sep + 'META-INF' + Path.sep + 'vault').then(
             function () {
