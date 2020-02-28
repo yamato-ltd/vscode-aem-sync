@@ -19,12 +19,14 @@ function activate(context) {
 		}
 	});
 
-	context.subscriptions.push(vscode.commands.registerCommand('extension.aempush', (filePath) => {
-		SyncManager.push(filePath.fsPath);
+	context.subscriptions.push(vscode.commands.registerCommand('extension.aempush', function(filePath) {
+		filePath = filePath ? filePath.fsPath : vscode.window.activeTextEditor.document.fileName;
+		SyncManager.push(filePath);
 	}));
 
-	context.subscriptions.push(vscode.commands.registerCommand('extension.aempull', (filePath) => {
-		SyncManager.pull(filePath.fsPath);
+	context.subscriptions.push(vscode.commands.registerCommand('extension.aempull', function(filePath) {
+		filePath = filePath ? filePath.fsPath : vscode.window.activeTextEditor.document.fileName;
+		SyncManager.pull(filePath);
 		// Refresh editor
 		for (var editor of vscode.window.visibleTextEditors) {
 			if (!editor.document.isDirty) {
