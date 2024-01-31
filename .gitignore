@@ -1,4 +1,5 @@
-node_modules
+*.vsix
 .vscode-test/
 dist/
-*.vsix
+node_modules
+out/
