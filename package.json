@@ -105,6 +105,8 @@
 		"@types/mocha": "^10.0.6",
 		"@types/node": "^12.12.14",
 		"@types/vscode": "^1.40.0",
+		"@vscode/test-cli": "^0.0.4",
+		"@vscode/test-electron": "^2.3.9",
 		"eslint": "^6.7.2",
 		"mocha": "^10.2.0",
 		"ts-loader": "^9.5.1",
