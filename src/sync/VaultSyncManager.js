@@ -13,7 +13,7 @@
         AdmZip = require('adm-zip'),
         Q = require('q'),
         Glob = require('glob'),
-        XMLDom = require('xmldom'),
+        XMLDom = require('@xmldom/xmldom'),
         XPath = require('xpath'),
         PackMgr = require('./PackMgr'),
         Filter = require('./Filter'),
